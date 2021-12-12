@@ -1,0 +1,15 @@
+<div class="container-fluid">
+  <h1 class="mb-3">
+    What days work best for you?
+  </h1>
+  <div>
+    <form #myForm="ngForm" (submit)="submitForm(myForm)" novalidate>
+      <div custom-control custom-checkbox *ngFor="let day of ['Monday','Tuesday','Wednesday','Thursday','Friday']">
+        <input class="custom-control-input" id={{day.toLowerCase()}} name={{day.toLowerCase()}} type="checkbox" ngModel=true>
+        <label class="custom-control-label" for={{day.toLowerCase()}}>{{day}}</label>
+      </div>
+
+      <button type="submit" class="btn btn-danger btn-lg btn-block">Confirm</button>
+    </form>
+  </div>
+</div>
