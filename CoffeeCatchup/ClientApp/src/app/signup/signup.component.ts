@@ -26,9 +26,8 @@ export class SignupComponent implements OnInit {
           form.value[k] = true
         }
       }
-      form.value["email"] = "test@gamil.com"
-      form.value["userid"] = "1234"
-      this.http.post<any>(this.baseURL + "api/signup/store", form.value).subscribe(x => { alert(x.success)})
+      form.value["email"] = (new Date()).toString() + "test@gamil.com"
+      this.http.post<any>(this.baseURL + "api/signup/store", form.value).subscribe(x => { alert(x.result)})
     }
   }
 

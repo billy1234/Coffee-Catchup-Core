@@ -1,31 +1,39 @@
 using System;
-using CoffeeCatchup.Databases;
+using System.Net.Http;
+using System.Threading.Tasks;
 using CoffeeCatchup.Models;
+using CoffeeCatchup.Services;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace CoffeeCatchup.Controllers
 {
     [Route("api/signup")]
     public class SignupControler : Controller
     {
-        private UserDBContext context { get; }
 
-        [HttpPost("store")]
-        public JsonResult StoreSignup(DayPrefrences data)
-        {
-            //context.Add(data);
-            System.Diagnostics.Debug.WriteLine(data.monday);
-            return Json(new { success=true });
+        UsersDataAPIService usersService;
+        public SignupControler(UsersDataAPIService usersService) {
+            this.usersService = usersService;
         }
 
-        public class DayPrefrences
-        {
-            public bool monday { get; set; }
-            public bool tuesday { get; set; }
-            public bool wednesday { get; set; }
+        [HttpPost("store")]
+        [Consumes("application/json")]
+        public async Task<ActionResult> StoreSignup([FromBody] UserModel data) {
+            HttpResponseMessage result = await usersService.postUser(data);
 
-            public bool thursday { get; set; }
-            public bool friday { get; set; }
+
+            if (result.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return StatusCode(200);
+            }
+            else
+            {
+                return new ObjectResult(new { result= await result.Content.ReadAsStringAsync()})
+                {
+                    StatusCode = 400
+                };
+            }
         }
 
     }
